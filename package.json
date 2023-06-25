@@ -1,0 +1,13 @@
+{
+  "name": "logically-coding",
+  "description": "JavaScript Logically Coding.",
+  "workspaces": [
+    "packages/*"
+  ],
+  "private": true,
+  "ignoreChanges": [
+    "ignored-file",
+    "**/__tests__/**",
+    "**/*.md"
+  ]
+}
