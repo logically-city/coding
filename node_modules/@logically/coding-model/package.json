@@ -1,5 +1,39 @@
 {
   "name": "@logically/coding-model",
   "version": "0.0.0",
-  "description": "Logically coding model."
+  "description": "Logically coding model.",
+  "keywords": [
+    "typescript",
+    "coding",
+    "model"
+  ],
+  "author": {
+    "name": "City",
+    "email": "city@nanzc.com"
+  },
+  "homepage": "https://github.com/logically-city/coding/tree/main/packages/model#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/logically-city/coding.git"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "es"
+  ],
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "es/index.d.ts",
+  "unpkg": "dist/index.min.js",
+  "scripts": {
+    "build": "lough-build",
+    "dev": "lough-build dev"
+  },
+  "devDependencies": {
+    "@lough/build-cli": "^0.2.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }
