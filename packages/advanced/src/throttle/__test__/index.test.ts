@@ -1,9 +1,25 @@
 import createThrottleInterval from '..';
+jest.useFakeTimers();
 
-test('createThrottleInterval', () => {
-  const c = createThrottleInterval(v => v);
+const ref = { current: 1 };
+const c = createThrottleInterval(() => {
+  ref.current += 1;
+});
 
-  expect(c(1)).toBe(1);
+c();
 
-  // expect(c(2)).toBe(2);
+test('1', () => {
+  expect(ref.current).toBe(2);
+});
+
+c();
+
+test('2', () => {
+  expect(ref.current).toBe(2);
+});
+
+test('3', () => {
+  setTimeout(() => {
+    expect(ref.current).toBe(3);
+  }, 1001);
 });
