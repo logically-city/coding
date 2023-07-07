@@ -14,6 +14,7 @@ test('debounce 1', () => {
 
 test('debounce 2', () => {
   setTimeout(() => {
-    expect(ref.current).toBe(34);
+    expect(ref.current).toBe(2);
   }, 1001);
+  jest.runAllTimers();
 });

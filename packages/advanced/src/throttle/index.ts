@@ -79,7 +79,10 @@ export const createThrottleInterval = <T extends (...args: any[]) => void>(
     else {
       const nowTime = Number(new Date());
       const intervalTime = nowTime - runTime;
-      if (initial && intervalTime > interval) callback(...args);
+      if (initial && intervalTime > interval) {
+        callback(...args);
+        return;
+      }
     }
 
     timeout = setTimeout(() => {

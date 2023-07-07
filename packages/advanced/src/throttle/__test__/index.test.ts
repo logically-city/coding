@@ -8,18 +8,24 @@ const c = createThrottleInterval(() => {
 
 c();
 
-test('1', () => {
+test('current + 1 as 2', () => {
   expect(ref.current).toBe(2);
 });
 
 c();
 
-test('2', () => {
+test('current + 1 as 2', () => {
   expect(ref.current).toBe(2);
 });
 
-test('3', () => {
+test('current timeout + 1 as 3', () => {
   setTimeout(() => {
-    expect(ref.current).toBe(3);
+    expect(ref.current).toBe(2);
+    c();
+    setTimeout(() => {
+      expect(ref.current).toBe(3);
+    }, 1001);
+    jest.runAllTimers();
   }, 1001);
+  jest.runAllTimers();
 });

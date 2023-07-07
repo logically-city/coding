@@ -1,3 +1,3 @@
-export * from './debounceInterval';
-export * from './throttleInterval';
-export * from './createRaceLock';
+export * from './debounce';
+export * from './throttle';
+export * from './race';
