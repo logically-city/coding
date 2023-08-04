@@ -98,3 +98,11 @@ export const createThrottleInterval = <T extends (...args: any[]) => void>(
 };
 
 export default createThrottleInterval;
+
+/**
+ * 创建节流函数
+ * @description interval 内执行一次
+ */
+export const createThrottle = () => {
+  //
+};

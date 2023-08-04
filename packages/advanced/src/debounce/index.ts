@@ -1,83 +1,49 @@
 /**
- * 创建防抖函数 选项
+ * 防抖函数选项
  */
-interface IOptions {
-  /**
-   * 立即执行
-   *
-   * default = false
-   */
-  immediate?: boolean;
-  /**
-   * 创建执行 - 创建时
-   *
-   * default = false
-   */
-  creating?: boolean;
-  /**
-   * 创建执行参数
-   */
-  creatingParams?: any[];
+interface DebounceOptions {
   /**
    * 间隔
-   *
-   * default = 1000
+   * @default 1000
    */
   interval?: number;
+  /**
+   * 立即执行
+   * @default false
+   */
+  immediate?: boolean;
 }
 
 /**
  * 创建防抖函数
- * @param callback 执行函数
- * @param options `{immediate: 立即执行; interval: 间隔;}` | 间隔
- * @returns 执行函数
+ * @description interval 后执行一次
  */
-export function createDebounceInterval<T extends (...args: any[]) => void>(
-  callback: T,
-  options: IOptions | number = 1000
-): T {
-  /**
-   * 立即执行
-   */
-  const immediate = typeof options === 'number' ? false : options.immediate || false;
-  /**
-   * 创建时执行
-   */
-  const creating = typeof options === 'number' ? false : options.creating || false;
-  /**
-   * 间隔
-   */
-  const interval = typeof options === 'number' ? options : options.interval || 1000;
-  /**
-   * 句柄
-   */
+export const createDebounce = <T extends (...args: any[]) => void>(callback: T, options: DebounceOptions = {}) => {
+  const { interval = 1000, immediate = false } = options;
   let timeout: number | null = null;
-
-  // 创建执行
-  if (creating) callback(...((options as any)?.creatingParams || []));
 
   /**
    * 防抖函数
    */
-  const debounced = (...args: any[]) => {
-    // 清除延时器
+  const debounced = (...args: Parameters<T>) => {
     if (timeout) clearTimeout(timeout);
 
-    /* 立即执行 */
-    if (immediate) {
-      timeout = setTimeout(() => {
-        timeout = null;
-      }, interval) as unknown as number;
-
-      if (!timeout) callback(...args);
-      return;
+    if (immediate && !timeout) {
+      callback(...args);
     }
 
-    /* 延时执行 */
-    timeout = setTimeout(() => callback(...args), interval) as unknown as number;
+    timeout = setTimeout(() => {
+      timeout = null;
+      if (!immediate) callback(...args);
+    }, interval) as unknown as number;
   };
 
-  return debounced as T;
-}
+  /**
+   * 取消防抖
+   */
+  debounced.cancel = () => {
+    if (timeout) clearTimeout(timeout);
+  };
 
-export default createDebounceInterval;
+  return debounced;
+};
