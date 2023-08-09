@@ -15,19 +15,18 @@ export class EventCentre<
   }
 
   once<T extends Name = Name>(name: T, listener: Map[T]) {
-    listener = ((...args: any[]) => {
+    const _listener = ((...args: any[]) => {
       const result = listener.apply(this, args);
-      this.remove(name, listener);
+      this.remove(name, _listener);
       return result;
     }) as Map[T];
 
-    if (this.eventMap[name]) this.eventMap[name].push(listener);
-    else this.eventMap[name] = [listener];
+    this.on(name, _listener);
 
     return this;
   }
 
-  emit<T extends Name = Name>(name: Name, ...args: Parameters<Map[T]>) {
+  emit<T extends Name = Name>(name: T, ...args: Parameters<Map[T]>) {
     for (const listener of this.listeners(name)) {
       listener?.apply(this, args);
     }
@@ -53,6 +52,6 @@ export class EventCentre<
   }
 
   listeners<T extends Name = Name>(name: T) {
-    return [...(this.eventMap[name] || [])];
+    return Array.from(this.eventMap[name] || []);
   }
 }

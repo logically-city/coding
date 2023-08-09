@@ -1,4 +1,4 @@
-import { PromiseOr } from '@lyrical/types';
+import { PromiseOr } from '@logically/types';
 
 /**
  * 洋葱中间件
@@ -8,7 +8,7 @@ import { PromiseOr } from '@lyrical/types';
  */
 export type IOnionMiddlewareHandler<T> = (
   ctx: T,
-  next: (params: T, options?: { jump?: boolean }) => Promise<false | void | T | undefined>
+  next: (params: T) => Promise<false | void | T | undefined>
 ) => PromiseOr<false | void | T | undefined>;
 
 /**
@@ -40,23 +40,14 @@ export class Onion<T> {
    */
   private middlewareList: Array<IMiddleware<T>> = [];
 
-  private options: {
-    /**
-     * 是否开启循环模式
-     */
-    loop: boolean;
-  };
-
   constructor(
-    options: {
+    private options: {
       /**
        * 是否开启循环模式
        */
       loop: boolean;
     } = { loop: false }
-  ) {
-    this.options = options;
-  }
+  ) {}
 
   /**
    * 注册使用中间件

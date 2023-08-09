@@ -21,6 +21,9 @@ describe('createDebounce', () => {
     debouncedFunction();
     debouncedFunction();
 
+    // 回调函数不应在开始前执行
+    expect(mockCallback).toHaveBeenCalledTimes(0);
+
     // 将定时器时间推进 1000 毫秒
     jest.advanceTimersByTime(1000);
 
@@ -28,8 +31,8 @@ describe('createDebounce', () => {
     expect(mockCallback).toHaveBeenCalledTimes(1);
   });
 
-  it('当立即执行选项为 true 时，应立即执行回调函数', () => {
-    const debouncedFunction = createDebounce(mockCallback, { interval: 1000, immediate: true });
+  it('当开始前执行选项为 true 时，应在开始前执行回调函数', () => {
+    const debouncedFunction = createDebounce(mockCallback, { interval: 1000, leading: true });
 
     // 快速多次调用防抖函数
     debouncedFunction();
@@ -38,13 +41,13 @@ describe('createDebounce', () => {
     debouncedFunction();
     debouncedFunction();
 
-    // 回调函数应该立即执行一次
+    // 回调函数应在开始前执行一次
     expect(mockCallback).toHaveBeenCalledTimes(1);
 
     // 将定时器时间推进 1000 毫秒
     jest.advanceTimersByTime(1000);
 
-    // 在时间间隔后，回调函数不应再次被调用
+    // 在时间间隔后，回调函数再次被调用一次
     expect(mockCallback).toHaveBeenCalledTimes(1);
   });
 

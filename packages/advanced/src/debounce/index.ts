@@ -8,10 +8,11 @@ interface DebounceOptions {
    */
   interval?: number;
   /**
-   * 立即执行
+   * 开始前执行
+   * @description 在防抖开始前执行调用
    * @default false
    */
-  immediate?: boolean;
+  leading?: boolean;
 }
 
 /**
@@ -19,7 +20,7 @@ interface DebounceOptions {
  * @description interval 后执行一次
  */
 export const createDebounce = <T extends (...args: any[]) => void>(callback: T, options: DebounceOptions = {}) => {
-  const { interval = 1000, immediate = false } = options;
+  const { interval = 1000, leading = false } = options;
   let timeout: number | null = null;
 
   /**
@@ -28,13 +29,13 @@ export const createDebounce = <T extends (...args: any[]) => void>(callback: T, 
   const debounced = (...args: Parameters<T>) => {
     if (timeout) clearTimeout(timeout);
 
-    if (immediate && !timeout) {
+    if (leading && !timeout) {
       callback(...args);
     }
 
     timeout = setTimeout(() => {
       timeout = null;
-      if (!immediate) callback(...args);
+      if (!leading) callback(...args);
     }, interval) as unknown as number;
   };
 

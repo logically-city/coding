@@ -1,108 +1,59 @@
-interface IOptions {
-  /**
-   * 初始执行 - 一轮中最开始调用时
-   */
-  initial?: boolean;
-  /**
-   * 延时执行 - 结束时
-   *
-   * default = false
-   */
-  delayed?: boolean;
-  /**
-   * 创建执行 - 创建时
-   *
-   * default = false
-   */
-  creating?: boolean;
-  /**
-   * 创建执行参数
-   */
-  creatingParams?: any[];
+/**
+ * 节流函数选项
+ */
+interface ThrottleOptions {
   /**
    * 间隔
-   *
-   * default = 1000
+   * @default 1000
    */
   interval?: number;
+  /**
+   * 结束后执行
+   * @description 在节流结束后执行调用
+   * @default false
+   */
+  trailing?: boolean;
 }
-
-/**
- * 创建节流函数
- * @param callback 执行函数
- * @param interval
- * @returns 执行函数
- */
-export const createThrottleInterval = <T extends (...args: any[]) => void>(
-  callback: T,
-  options: IOptions | number = 1000
-): T => {
-  /**
-   * 每轮初始时执行
-   */
-  const initial = typeof options === 'number' ? false : options.initial || false;
-  /**
-   * 延时执行
-   */
-  const delayed = typeof options === 'number' ? false : options.delayed || false;
-  /**
-   * 立即执行
-   */
-  const immediate = !delayed;
-  /**
-   * 创建时执行
-   */
-  const creating = typeof options === 'number' ? false : options.creating || false;
-  /**
-   * 间隔
-   */
-  const interval = typeof options === 'number' ? options : options.interval || 1000;
-  /**
-   * 延时器标记
-   */
-  let timeout: number | null = null;
-  /**
-   * 执行时间标记
-   */
-  let runTime = 0;
-
-  // 创建执行
-  if (creating) callback(...((options as any)?.creatingParams || []));
-
-  /**
-   * 节流函数
-   */
-  const throttled = (...args: any[]) => {
-    if (timeout) return;
-
-    if (immediate) callback(...args);
-    else {
-      const nowTime = Number(new Date());
-      const intervalTime = nowTime - runTime;
-      if (initial && intervalTime > interval) {
-        callback(...args);
-        return;
-      }
-    }
-
-    timeout = setTimeout(() => {
-      timeout = null;
-      if (delayed) {
-        runTime = Number(new Date());
-        callback(...args);
-      }
-    }, interval) as unknown as number;
-  };
-
-  return throttled as T;
-};
-
-export default createThrottleInterval;
 
 /**
  * 创建节流函数
  * @description interval 内执行一次
  */
-export const createThrottle = () => {
-  //
+export const createThrottle = <T extends (...args: any[]) => void>(callback: T, options: ThrottleOptions = {}) => {
+  const { interval = 1000, trailing = false } = options;
+  let timeout: NodeJS.Timeout | null = null;
+  let runTime = 0;
+
+  /**
+   * 节流函数
+   */
+  const throttled = (...args: Parameters<T>) => {
+    if (timeout) return;
+
+    const nowTime = Date.now();
+    const intervalTime = nowTime - runTime;
+
+    if (intervalTime > interval) {
+      runTime = nowTime;
+      callback(...args);
+    }
+
+    timeout = setTimeout(() => {
+      timeout = null;
+      if (trailing) {
+        runTime = Date.now();
+        callback(...args);
+      }
+    }, interval);
+  };
+
+  /**
+   * 取消节流
+   */
+  throttled.cancel = () => {
+    runTime = 0;
+    if (timeout) clearTimeout(timeout);
+  };
+
+  return throttled;
 };

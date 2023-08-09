@@ -1,4 +1,4 @@
-import { PromiseOr } from '@lyrical/types';
+import { PromiseOr } from '@logically/types';
 
 /**
  * 链式中间件
@@ -101,8 +101,9 @@ export class Chained<T> {
 
       /* 中间件处理 */
       let res;
-      if (check?.(ctx)) res = await handle(ctx);
-      else res = await handle(ctx);
+      if (check) {
+        if (check(ctx)) res = await handle(ctx);
+      } else res = await handle(ctx);
 
       /* 返回判断 */
       if (res === false) return false;
