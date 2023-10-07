@@ -1,7 +1,7 @@
 import { deepClone } from '..';
 
 describe('deepClone', () => {
-  it('should clone primitive values', () => {
+  it('应克隆原始值', () => {
     expect(deepClone(1)).toBe(1);
     expect(deepClone('string')).toBe('string');
     expect(deepClone(true)).toBe(true);
@@ -9,7 +9,7 @@ describe('deepClone', () => {
     expect(deepClone(undefined)).toBe(undefined);
   });
 
-  it('should clone arrays', () => {
+  it('应克隆数组', () => {
     const arr = [1, 'string', { a: 1 }, [2, 3]];
     const cloned = deepClone(arr);
 
@@ -19,7 +19,7 @@ describe('deepClone', () => {
     expect(cloned[3]).not.toBe(arr[3]);
   });
 
-  it('should clone objects', () => {
+  it('应克隆对象', () => {
     const obj = {
       number: 1,
       string: 'string',
@@ -40,7 +40,7 @@ describe('deepClone', () => {
     expect(cloned.regex).not.toBe(obj.regex);
   });
 
-  it('should handle circular references', () => {
+  it('应处理循环引用', () => {
     const obj: any = { a: 1 };
     obj.self = obj;
     const cloned = deepClone(obj);
@@ -51,7 +51,7 @@ describe('deepClone', () => {
     expect(cloned.self).not.toBe(obj.self);
   });
 
-  it('should clone Date and RegExp instances', () => {
+  it('应该克隆Date和RegExp实例', () => {
     const date = new Date();
     const regex = /test/gi;
 

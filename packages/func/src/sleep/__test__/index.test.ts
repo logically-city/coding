@@ -1,6 +1,6 @@
 import { sleep } from '..';
 
-test('sleep function', async () => {
+test('sleep', async () => {
   const start = Date.now();
   await sleep(1000); // 暂停1秒
   const end = Date.now();
