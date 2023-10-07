@@ -1,11 +1,11 @@
-import { Chained, IChainedMiddlewareHandler } from '..'; // 替换为实际的路径
+import { Chained, ChainedMiddlewareHandler } from '..'; // 替换为实际的路径
 
 describe('Chained', () => {
   it('应正确触发普通中间件', async () => {
     const chained = new Chained<number>();
 
-    const middleware1: IChainedMiddlewareHandler<number> = async ctx => ctx + 1;
-    const middleware2: IChainedMiddlewareHandler<number> = async ctx => ctx * 2;
+    const middleware1: ChainedMiddlewareHandler<number> = async ctx => ctx + 1;
+    const middleware2: ChainedMiddlewareHandler<number> = async ctx => ctx * 2;
 
     chained.use(middleware1).use(middleware2);
 
@@ -17,8 +17,8 @@ describe('Chained', () => {
   it('应正确触发后置中间件', async () => {
     const chained = new Chained<string>();
 
-    const middleware1: IChainedMiddlewareHandler<string> = async ctx => ctx + ' world';
-    const middleware2: IChainedMiddlewareHandler<string> = async ctx => ctx.toUpperCase();
+    const middleware1: ChainedMiddlewareHandler<string> = async ctx => ctx + ' world';
+    const middleware2: ChainedMiddlewareHandler<string> = async ctx => ctx.toUpperCase();
 
     chained.use(middleware1, { afterUse: true }).use(middleware2);
 
@@ -30,9 +30,9 @@ describe('Chained', () => {
   it('当中间件返回 false 时，应提前结束调用链', async () => {
     const chained = new Chained<number>();
 
-    const middleware1: IChainedMiddlewareHandler<number> = async ctx => ctx * 2;
-    const middleware2: IChainedMiddlewareHandler<number> = async () => false as false; // 提前结束调用链
-    const middleware3: IChainedMiddlewareHandler<number> = async ctx => ctx + 1;
+    const middleware1: ChainedMiddlewareHandler<number> = async ctx => ctx * 2;
+    const middleware2: ChainedMiddlewareHandler<number> = async () => false as false; // 提前结束调用链
+    const middleware3: ChainedMiddlewareHandler<number> = async ctx => ctx + 1;
 
     chained.use(middleware1).use(middleware2).use(middleware3);
 
@@ -44,9 +44,9 @@ describe('Chained', () => {
   it('当中间件返回 undefined 时，应提前结束当前中间件', async () => {
     const chained = new Chained<number>();
 
-    const middleware1: IChainedMiddlewareHandler<number> = async ctx => ctx * 2;
-    const middleware2: IChainedMiddlewareHandler<number> = async () => undefined; // 提前结束当前中间件
-    const middleware3: IChainedMiddlewareHandler<number> = async ctx => ctx + 1;
+    const middleware1: ChainedMiddlewareHandler<number> = async ctx => ctx * 2;
+    const middleware2: ChainedMiddlewareHandler<number> = async () => undefined; // 提前结束当前中间件
+    const middleware3: ChainedMiddlewareHandler<number> = async ctx => ctx + 1;
 
     chained.use(middleware1).use(middleware2).use(middleware3);
 
@@ -58,8 +58,8 @@ describe('Chained', () => {
   it('当中间件返回 ctx 时，应传递给下一个中间件', async () => {
     const chained = new Chained<number>();
 
-    const middleware1: IChainedMiddlewareHandler<number> = async ctx => ctx * 2;
-    const middleware2: IChainedMiddlewareHandler<number> = async ctx => ctx + 5;
+    const middleware1: ChainedMiddlewareHandler<number> = async ctx => ctx * 2;
+    const middleware2: ChainedMiddlewareHandler<number> = async ctx => ctx + 5;
 
     chained.use(middleware1).use(middleware2);
 
@@ -71,8 +71,8 @@ describe('Chained', () => {
   it('应正确使用 check 函数控制中间件的执行', async () => {
     const chained = new Chained<number>();
 
-    const middleware1: IChainedMiddlewareHandler<number> = async ctx => ctx * 2;
-    const middleware2: IChainedMiddlewareHandler<number> = async ctx => ctx + 5;
+    const middleware1: ChainedMiddlewareHandler<number> = async ctx => ctx * 2;
+    const middleware2: ChainedMiddlewareHandler<number> = async ctx => ctx + 5;
 
     const checkFn = (ctx: number) => ctx > 5; // 仅当 ctx 大于 5 时执行中间件
 

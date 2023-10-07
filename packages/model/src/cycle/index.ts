@@ -2,8 +2,8 @@
  * 生命周期
  */
 export class LifeCycle<
-  Map extends { [key in keyof Map]?: (...args: any[]) => any },
-  Name extends keyof Map = keyof Map
+  Map extends Record<string, (...args: any) => any>,
+  Name extends keyof Map | (string & Record<never, never>) = keyof Map | (string & Record<never, never>)
 > {
   private cycleList: Array<Map> = [];
 

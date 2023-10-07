@@ -6,7 +6,7 @@ import { PromiseOr } from '@logically/types';
  * 2.return false 结束当前调用链
  * 3.return ctx 改变 ctx
  */
-export type IOnionMiddlewareHandler<T> = (
+export type OnionMiddlewareHandler<T> = (
   ctx: T,
   next: (params: T) => Promise<false | void | T | undefined>
 ) => PromiseOr<false | void | T | undefined>;
@@ -14,7 +14,7 @@ export type IOnionMiddlewareHandler<T> = (
 /**
  * 洋葱中间件选项
  */
-export interface IOnionMiddlewareOptions {
+interface OnionMiddlewareOptions {
   /**
    * 循环模式下，中间件返回 `false` 时，返回中间件 `ctx`
    */
@@ -24,11 +24,11 @@ export interface IOnionMiddlewareOptions {
 /**
  * 中间件
  */
-interface IMiddleware<T> extends IOnionMiddlewareOptions {
+interface Middleware<T> extends OnionMiddlewareOptions {
   /**
    * 中间件处理函数
    */
-  handle: IOnionMiddlewareHandler<T>;
+  handle: OnionMiddlewareHandler<T>;
 }
 
 /**
@@ -38,7 +38,7 @@ export class Onion<T> {
   /**
    * 中间件列表
    */
-  private middlewareList: Array<IMiddleware<T>> = [];
+  private middlewareList: Array<Middleware<T>> = [];
 
   constructor(
     private options: {
@@ -55,8 +55,8 @@ export class Onion<T> {
    * @param options 参数
    */
   use(
-    handle: IOnionMiddlewareHandler<T> | Array<IOnionMiddlewareHandler<T>>,
-    options: IOnionMiddlewareOptions = {}
+    handle: OnionMiddlewareHandler<T> | Array<OnionMiddlewareHandler<T>>,
+    options: OnionMiddlewareOptions = {}
   ): Onion<T> {
     const handles = Array.isArray(handle) ? handle : [handle];
 

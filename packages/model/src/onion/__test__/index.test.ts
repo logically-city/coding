@@ -1,7 +1,7 @@
-import { IOnionMiddlewareHandler, Onion } from '..';
+import { OnionMiddlewareHandler, Onion } from '..';
 
 type IContext = { data: number };
-type IMiddleware = IOnionMiddlewareHandler<IContext>;
+type IMiddleware = OnionMiddlewareHandler<IContext>;
 
 describe('Onion', () => {
   it('应正确触发洋葱中间件', async () => {

@@ -6,12 +6,12 @@ import { PromiseOr } from '@logically/types';
  * 2.return false 结束当前调用链
  * 3.return ctx 改变 ctx
  */
-export type IChainedMiddlewareHandler<T> = (ctx: T) => PromiseOr<T | false | undefined | void>;
+export type ChainedMiddlewareHandler<T> = (ctx: T) => PromiseOr<T | false | undefined | void>;
 
 /**
  * 链式中间件注册选项
  */
-interface IChainedMiddlewareUseOptions {
+interface ChainedMiddlewareUseOptions {
   /**
    * 在最后使用
    */
@@ -21,7 +21,7 @@ interface IChainedMiddlewareUseOptions {
 /**
  * 链式中间件选项
  */
-export interface IChainedMiddlewareOptions<T> extends IChainedMiddlewareUseOptions {
+interface ChainedMiddlewareOptions<T> extends ChainedMiddlewareUseOptions {
   /**
    * 通过函数判断是否使用中间件
    */
@@ -31,11 +31,11 @@ export interface IChainedMiddlewareOptions<T> extends IChainedMiddlewareUseOptio
 /**
  * 中间件
  */
-interface IMiddleware<T> extends Omit<IChainedMiddlewareOptions<T>, keyof IChainedMiddlewareUseOptions> {
+interface Middleware<T> extends Omit<ChainedMiddlewareOptions<T>, keyof ChainedMiddlewareUseOptions> {
   /**
    * 中间件处理函数
    */
-  handle: IChainedMiddlewareHandler<T>;
+  handle: ChainedMiddlewareHandler<T>;
 }
 
 /**
@@ -45,12 +45,12 @@ export class Chained<T> {
   /**
    * 中间件列表
    */
-  private middlewareList: Array<IMiddleware<T>> = [];
+  private middlewareList: Array<Middleware<T>> = [];
 
   /**
    * 后置中间件
    */
-  private afterMiddlewareList: Array<IMiddleware<T>> = [];
+  private afterMiddlewareList: Array<Middleware<T>> = [];
 
   /**
    * 触发列表
@@ -65,8 +65,8 @@ export class Chained<T> {
    * @param options 参数
    */
   use(
-    handle: IChainedMiddlewareHandler<T> | Array<IChainedMiddlewareHandler<T>>,
-    options: IChainedMiddlewareOptions<T> = {}
+    handle: ChainedMiddlewareHandler<T> | Array<ChainedMiddlewareHandler<T>>,
+    options: ChainedMiddlewareOptions<T> = {}
   ): Chained<T> {
     const handles = Array.isArray(handle) ? handle : [handle];
 
