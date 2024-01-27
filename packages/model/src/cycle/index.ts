@@ -1,10 +1,7 @@
 /**
  * 生命周期
  */
-export class LifeCycle<
-  Map extends Record<string, (...args: any) => any>,
-  Name extends keyof Map | (string & Record<never, never>) = keyof Map | (string & Record<never, never>)
-> {
+export class LifeCycle<Map extends { [K in keyof Map]: (...args: any) => any }> {
   private cycleList: Array<Map> = [];
 
   on(cycle: Map) {
@@ -13,7 +10,7 @@ export class LifeCycle<
     return this;
   }
 
-  emit<T extends Name = Name>(name: T, ...args: Parameters<Map[T]>) {
+  emit<T extends keyof Map = keyof Map>(name: T, ...args: Parameters<Map[T]>) {
     for (const cycle of this.cycleList) {
       cycle[name]?.apply(this, args);
     }
