@@ -32,7 +32,7 @@
     "dev": "lough-build dev"
   },
   "devDependencies": {
-    "@lough/build-cli": "^0.2.0"
+    "@lough/build-cli": "^0.3.1"
   },
   "publishConfig": {
     "access": "public",
