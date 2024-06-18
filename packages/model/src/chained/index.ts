@@ -21,7 +21,7 @@ interface ChainedMiddlewareUseOptions {
 /**
  * 链式中间件选项
  */
-interface ChainedMiddlewareOptions<T> extends ChainedMiddlewareUseOptions {
+export interface ChainedMiddlewareOptions<T> extends ChainedMiddlewareUseOptions {
   /**
    * 通过函数判断是否使用中间件
    */
